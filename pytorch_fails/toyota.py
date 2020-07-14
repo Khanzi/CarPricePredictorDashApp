@@ -1,3 +1,6 @@
+# TODO: Allow it to run on cuda
+# TODO: Put all funcs in a file that I can import
+# TODO: Documentation
 #%% Libraries   
 import torch 
 from torch import nn, sqrt
@@ -125,7 +128,8 @@ model = CarsModel(8)
 train_model(train_dl, model)
 
 # %%
-eval_model(test_dl, model)
+mse = eval_model(test_dl, model)
+print("MSE: {} \n RMSE: {}".format(mse, np.sqrt(mse)))
 
 
 
