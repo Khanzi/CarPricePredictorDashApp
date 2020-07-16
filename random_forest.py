@@ -16,6 +16,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 data = {}
+predict_x = {}
 model = {}
 # %%
 
@@ -25,6 +26,7 @@ model = {}
 class DataSet():
     def __init__(self, path, label_names=['model'], ohe_names=['transmission','fuelType'], random_state=420):
         self.df = pd.read_csv(path)
+        self.og_columns = self.df.columns
         self.random_state = random_state
         self.encodings = LabelEncoder() 
         self.scaler = StandardScaler()
@@ -56,20 +58,31 @@ class DataSet():
         self.df = pd.read_csv(path)
 
     def transforms(self):
+        #self.df = self.df.drop('tax', axis=1)
         self.df = self.df.drop(self.ohe_labels, axis=1)
         self.df['year'] = datetime.datetime.today().year - self.df['year']
+    
 
 # %%
 
+class PredData(DataSet):
+    def __init__(self, path):
+        super(PredData, self).__init__(path)
+        self.df = pd.DataFrame(columns = self.df.columns)
+
+    def newdata(self, newrow):
+        self.df = pd.DataFrame(data = newrow, columns = self.og_columns)
 # %%
 def import_datasets():
     data = {}
+    predict_x = {}
     for file in os.listdir('/home/kahlil/Documents/PythonPlayground/cars_pricing/data'):
         name = file[:-4]
         path = 'data/'+file
         data[name] = DataSet(path)
+        predict_x[name] = PredData(path)
     print('Data Imported')
-    return(data)
+    return(data, predict_x)
     
 def initialize_models():
     for dataset in data:
@@ -91,7 +104,4 @@ def show_scores():
         accuracy = (model[m].score(X_test, Y_test))
         print('Model for {} has an accuracy of {}'.format(m, accuracy))
 # %%
-# %%
-
-
-# %%
+data = import_datasets()
