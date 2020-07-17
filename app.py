@@ -239,6 +239,7 @@ def predictor_selector_update_enginesize(selected_model):
 @app.callback(
     Output('predict-selected-car-preview', 'children'),
     [
+        Input('predict-brand-selector', 'value'),
         Input('predict-model-selector', 'value'),
         Input('predict-year-selector', 'value'),
         Input('predict-transmission-selector', 'value'),
@@ -249,9 +250,14 @@ def predictor_selector_update_enginesize(selected_model):
     ]
 
 )
-def predictor_selected_data(model, year, transmission, fueltype, enginesize,mpg,mileage):
-    preview = "Model: {} {}  Transmission: {} \n Fueltype: {} \n Engine Size: {}L \n MPG: {} \n ODO Miles: {} ".format(model, year, transmission, fueltype, enginesize, mpg, mileage)
-    return(preview)
+def predictor_selected_data(brand, model, year, transmission, fueltype, enginesize,mpg,mileage):
+    brand = str(brand).lower()
+    new_row = [[model, year, transmission, mileage, fueltype, mpg, enginesize]]
+    predict_x[brand].newdata(new_row)
+    d = predict_x[brand].df # TODO: Check to make sure the pred_x is correct
+    c = [{"name": i, "id": i,} for i in (d.columns)] 
+    d = d.to_dict('rows')
+    return(dash_table.DataTable(data = d, columns = c))
 # %%
 if __name__ == '__main__':
     app.run_server(debug=True)

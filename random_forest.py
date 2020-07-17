@@ -35,10 +35,10 @@ class DataSet():
         self.colnames = self.df.columns
 
     def __len__(self):
-        return(len(df))
+        return(len(self.df))
 
-    def show_sample(self):
-        print(df.head())
+    def __repr__(self):
+        return(repr(self.df.head()))
 
     def encode(self):
         
@@ -68,10 +68,11 @@ class DataSet():
 class PredData(DataSet):
     def __init__(self, path):
         super(PredData, self).__init__(path)
+        self.df = self.df.drop(['price','tax'], axis=1)
         self.df = pd.DataFrame(columns = self.df.columns)
 
     def newdata(self, newrow):
-        self.df = pd.DataFrame(data = newrow, columns = self.og_columns)
+        self.df = pd.DataFrame(data = newrow, columns = self.df.columns)
 # %%
 def import_datasets():
     data = {}
@@ -104,4 +105,4 @@ def show_scores():
         accuracy = (model[m].score(X_test, Y_test))
         print('Model for {} has an accuracy of {}'.format(m, accuracy))
 # %%
-data = import_datasets()
+data, pred = import_datasets()
