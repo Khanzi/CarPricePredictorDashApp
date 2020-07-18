@@ -22,9 +22,6 @@ The goal of this project is to see if we can predict the prices of cars for diff
 ### Brands
 * Audi
 * BMW
-* Mercedez-Benz C-Class
-* Ford Focus
-* Ford
 * Hyundai
 * Mercedez-Benz
 * Skoda
@@ -35,8 +32,9 @@ The goal of this project is to see if we can predict the prices of cars for diff
 
 ### Known Issues
 
-1. Sometimes the `tax` field mismatches. This is due to the name being slightly different e.g, (`tax \poundsign`)
-    in the original dataset
 
+### About Me
+
+[Github](https://github.com/Khanzi)
 
 """

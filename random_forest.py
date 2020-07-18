@@ -105,4 +105,4 @@ def show_scores():
         accuracy = (model[m].score(X_test, Y_test))
         print('Model for {} has an accuracy of {}'.format(m, accuracy))
 # %%
-data, pred = import_datasets()
+data, predict_x = import_datasets()
