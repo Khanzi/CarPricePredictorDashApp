@@ -15,8 +15,9 @@ from collections import defaultdict
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+import pickle as pk
 data = {}
-predict_x = {}
+predx = {}
 model = {}
 # %%
 
@@ -26,6 +27,7 @@ model = {}
 class DataSet():
     def __init__(self, path, label_names=['model'], ohe_names=['transmission','fuelType'], random_state=420):
         self.df = pd.read_csv(path)
+        self.priceless = self.df.drop(['price','tax'], axis=1, errors=False)
         self.og_columns = self.df.columns
         self.random_state = random_state
         self.encodings = LabelEncoder() 
@@ -58,32 +60,32 @@ class DataSet():
         self.df = pd.read_csv(path)
 
     def transforms(self):
-        #self.df = self.df.drop('tax', axis=1)
+        self.df = self.df.drop(['tax', 'price'], axis=1)
         self.df = self.df.drop(self.ohe_labels, axis=1)
         self.df['year'] = datetime.datetime.today().year - self.df['year']
-    
 
-# %%
+    def newdata(self, newrow):
+        self.priceless.loc[len(self.df)] = newrow[0]
 
 class PredData(DataSet):
     def __init__(self, path):
-        super(PredData, self).__init__(path)
-        self.df = self.df.drop(['price','tax'], axis=1)
-        self.df = pd.DataFrame(columns = self.df.columns)
+        super().__init__(path)
 
-    def newdata(self, newrow):
-        self.df = pd.DataFrame(data = newrow, columns = self.df.columns)
+# %%
+
+
+
 # %%
 def import_datasets():
     data = {}
-    predict_x = {}
+    predx = {}
     for file in os.listdir('/home/kahlil/Documents/PythonPlayground/cars_pricing/data'):
         name = file[:-4]
         path = 'data/'+file
         data[name] = DataSet(path)
-        predict_x[name] = PredData(path)
+        predx[name] = PredData(path)
     print('Data Imported')
-    return(data, predict_x)
+    return(data, predx)
     
 def initialize_models():
     for dataset in data:
@@ -104,5 +106,22 @@ def show_scores():
         X_train, X_test, Y_train, Y_test = data[m].give_splits()
         accuracy = (model[m].score(X_test, Y_test))
         print('Model for {} has an accuracy of {}'.format(m, accuracy))
+
+
+def export_models():
+    for m in model:
+        filename = 'models/' +m + '.pkl'
+        pk.dump(model[m], open(filename, 'wb'))
+        print(filename)
+
+
+def import_models():
+    for m in os.listdir('models'):
+        filename = 'models/' + m 
+        #pk.load(model[m], open(filename, 'wb'))
+        model[m[:-4]] = pk.load(open(filename, 'rb'))
 # %%
-data, predict_x = import_datasets()
+data, predx = import_datasets()
+
+
+# TODO: Fix models to not use tax!!!!!!!!!!!!!!!!!!!!!!!
