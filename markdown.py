@@ -1,4 +1,7 @@
-
+# markdown.py
+"""
+This file contains all the dcc.Markdown attributes
+"""
 
 introduction = """
 # Pricing Different Car Brands 
