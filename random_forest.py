@@ -60,7 +60,7 @@ class DataSet():
         self.df = pd.read_csv(path)
 
     def transforms(self):
-        self.df = self.df.drop(['tax', 'price'], axis=1)
+        self.df = self.df.drop(['tax','price'], axis=1, errors='ignore')
         self.df = self.df.drop(self.ohe_labels, axis=1)
         self.df['year'] = datetime.datetime.today().year - self.df['year']
 
@@ -125,3 +125,5 @@ data, predx = import_datasets()
 
 
 # TODO: Fix models to not use tax!!!!!!!!!!!!!!!!!!!!!!!
+
+# %%

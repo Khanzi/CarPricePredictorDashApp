@@ -24,7 +24,6 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 # %% Funcs
 
-data = import_datasets()
 import_models()
 
 # %%
